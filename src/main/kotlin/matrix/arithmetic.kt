@@ -33,6 +33,16 @@ operator fun Matrix.div(B: Matrix) = times(B.inverse())
 
 operator fun Matrix.div(s: Number) = times(1 / s.toDouble())
 
+operator fun Matrix.divAssign(s: Number) = timesAssign(1 / s.toDouble())
+
+operator fun Matrix.timesAssign(s: Double) {
+    for (i in indices) {
+        this[i] *= s
+    }
+}
+
+operator fun Matrix.timesAssign(s: Number) = timesAssign(s.toDouble())
+
 operator fun List<Vector>.div(B: List<Vector>) = toMatrix() / B.toMatrix()
 fun Matrix.inverse(): Matrix = pseudoInverse()
 

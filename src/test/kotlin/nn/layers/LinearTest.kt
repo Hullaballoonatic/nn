@@ -2,14 +2,14 @@
 
 package nn.layers
 
-import addNoise
+import helpers.addNoise
 import helpers.rand
+import helpers.shouldBe
+import helpers.shouldBeAbout
 import matrix.matrixOfRows
 import matrix.times
 import nn.trainers.OrdinaryLeastSquares
 import org.junit.jupiter.api.Test
-import shouldBe
-import shouldBeAbout
 import vector.Vector
 import vector.fillByValue
 import vector.vectorOf

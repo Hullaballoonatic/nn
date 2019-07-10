@@ -3,6 +3,7 @@
 package nn
 
 import helpers.rand
+import helpers.shouldBeAbout
 import matrix.M
 import matrix.matrixOfRows
 import matrix.n
@@ -11,7 +12,6 @@ import nn.layers.Linear
 import nn.layers.Tanh
 import nn.trainers.OrdinaryLeastSquares
 import org.junit.jupiter.api.Test
-import shouldBeAbout
 import vector.Vector
 import vector.fill
 import kotlin.math.sqrt

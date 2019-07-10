@@ -4,7 +4,9 @@ package nn
 
 import helpers.errors.SizeMismatch
 import helpers.extensions.collections.apportion
+import helpers.extensions.collections.count
 import helpers.extensions.collections.list.without
+import helpers.notNear
 import matrix.*
 import vector.Vector
 import kotlin.math.sqrt
@@ -23,7 +25,7 @@ interface SupervisedLearner {
 
     fun countMisclassifications(X: Matrix, Y: Matrix): Int {
         checkEntries(X, Y)
-        return List(X.m) { predict(X[it]) != Y[it] }.count { true }
+        return List(X.m) { predict(X[it]) notNear Y[it] }.count
     }
 
     fun sumSquaredError(X: Matrix, Y: Matrix): Double {

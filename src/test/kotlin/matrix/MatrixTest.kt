@@ -2,8 +2,8 @@
 
 package matrix
 
+import helpers.shouldBe
 import org.junit.jupiter.api.Test
-import shouldBe
 
 internal class MatrixTest {
     private val A = M(3, 3) { 1 }

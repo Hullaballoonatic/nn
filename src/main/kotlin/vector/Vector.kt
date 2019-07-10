@@ -15,7 +15,7 @@ open class Vector(data: DoubleArray) : Iterable<Double>, Vec(data) {
 
     fun copyOf() = Vector(data.copyOf())
 
-    val size = size()
+    val size by lazy { size() }
 
     operator fun times(w: Vector): Double = zip(w) { a, b -> a * b }.sum()
 

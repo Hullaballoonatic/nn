@@ -1,7 +1,9 @@
 @file:Suppress("UNCHECKED_CAST")
 
+package helpers
+
 import helpers.errors.SizeMismatch
-import helpers.rand
+import helpers.extensions.collections.all
 import matrix.*
 import vector.Vector
 import kotlin.math.abs
@@ -59,7 +61,10 @@ infix fun DoubleArray.shouldNotBeAbout(that: DoubleArray) {
     if (zip(that) { a, b -> a near b }.any { true }) error("$this\n ↑ SHOULD NOT BE ABOUT ↓\n$that")
 }
 
-infix fun Number.notNear(other: Number) = !abs(toDouble() - other.toDouble()).isSmall
+infix fun Vector.near(other: Vector) = size == other.size && zip(other) { a, b -> a near b }.all
+infix fun Vector.notNear(other: Vector) = !near(other)
+
 infix fun Number.near(other: Number) = abs(toDouble() - other.toDouble()).isSmall
+infix fun Number.notNear(other: Number) = !near(other)
 
 val Number.isSmall get() = abs(toDouble()) <= 1e-16

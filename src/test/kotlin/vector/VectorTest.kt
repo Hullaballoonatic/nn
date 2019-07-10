@@ -3,8 +3,8 @@ package vector
 import matrix.matrixOfRows
 import org.junit.jupiter.api.Test
 
-import shouldBe
-import shouldNotBe
+import helpers.shouldBe
+import helpers.shouldNotBe
 
 internal class VectorTest {
     val a = vectorOf(1, 2, 3)

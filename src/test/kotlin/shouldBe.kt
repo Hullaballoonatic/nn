@@ -1,12 +1,8 @@
 @file:Suppress("UNCHECKED_CAST")
 
 import helpers.errors.SizeMismatch
-import helpers.extensions.matrix.dims
-import helpers.extensions.matrix.dimsStr
-import helpers.extensions.matrix.get
-import helpers.extensions.matrix.indices
 import helpers.rand
-import matrix.Matrix
+import matrix.*
 import vector.Vector
 import kotlin.math.abs
 

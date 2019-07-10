@@ -1,7 +1,6 @@
-package helpers.extensions.matrix
+package matrix
 
 import helpers.extensions.pair.until
-import matrix.Matrix
 import vector.Vector
 
 val Matrix.dims get() = m to n

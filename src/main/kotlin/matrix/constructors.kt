@@ -1,8 +1,7 @@
-package helpers.extensions.matrix
+package matrix
 
 import helpers.Json
 import helpers.errors.SizeMismatch
-import matrix.Matrix
 import vector.Vector
 
 fun Matrix.copyOf() = Matrix(0, n).also { res ->
@@ -11,7 +10,7 @@ fun Matrix.copyOf() = Matrix(0, n).also { res ->
     }
 }
 
-object Matrix {
+object M {
     operator fun invoke(numRows: Int, numCols: Int, valueByIndex: (p: Pair<Int, Int>) -> Number = { 0.0 }) = Matrix(0, numCols).apply {
         repeat(numRows) { i ->
             takeRow(DoubleArray(numCols) { j -> valueByIndex(i to j).toDouble() })
@@ -51,7 +50,7 @@ fun List<DoubleArray>.toMatrix() = Matrix(0, first().size).apply {
 }
 
 @JvmName("VectorListToMatrix")
-fun List<Vector>.toMatrix() = Matrix(size, first().size) { (i, j) -> this[i][j] }
+fun List<Vector>.toMatrix() = M(size, first().size) { (i, j) -> this[i][j] }
 
 @JvmName("DoubleListListToMatrix")
 fun List<List<Double>>.toMatrix() = Matrix(0, first().size).apply {
@@ -89,13 +88,13 @@ fun Matrix.fillByValue(op: (Double) -> Number) {
         this[i] = op(this[i]).toDouble()
 }
 
-fun Matrix.transformedByValue(op: (Double) -> Number) = Matrix(m, n) { op(this[it]).toDouble() }
-fun Matrix.transformedByIndex(op: (Pair<Int, Int>) -> Number) = Matrix(m, n) { op(it).toDouble() }
+fun Matrix.transformedByValue(op: (Double) -> Number) = M(m, n) { op(this[it]).toDouble() }
+fun Matrix.transformedByIndex(op: (Pair<Int, Int>) -> Number) = M(m, n) { op(it).toDouble() }
 
 fun List<Vector>.joinToVector() = drop(1).fold(first().copyOf()) { acc, v -> acc.append(v) }
 
 fun List<Matrix>.joinToMatrix(): Matrix = when (size) {
     0 -> Matrix(0, 0)
     1 -> first()
-    else -> Matrix(verifyAllHeights()) { i -> this@joinToMatrix.map { it[i] }.joinToVector() }
+    else -> M(verifyAllHeights()) { i -> this@joinToMatrix.map { it[i] }.joinToVector() }
 }

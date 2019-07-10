@@ -1,8 +1,8 @@
 package nn
 
-import helpers.extensions.matrix.joinToVector
 import helpers.rand
 import matrix.Matrix
+import matrix.joinToVector
 import vector.Vector
 import vector.fillBy
 import vector.fillByIndex

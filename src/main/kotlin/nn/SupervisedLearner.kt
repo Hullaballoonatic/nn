@@ -5,8 +5,7 @@ package nn
 import helpers.errors.SizeMismatch
 import helpers.extensions.collections.apportion
 import helpers.extensions.collections.list.without
-import helpers.extensions.matrix.*
-import matrix.Matrix
+import matrix.*
 import vector.Vector
 import kotlin.math.sqrt
 

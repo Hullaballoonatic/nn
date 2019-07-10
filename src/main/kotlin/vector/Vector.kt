@@ -1,8 +1,8 @@
 package vector
 
 import helpers.errors.SizeMismatch
-import helpers.extensions.matrix.n
 import matrix.Matrix
+import matrix.n
 import vec.Vec
 
 open class Vector(data: DoubleArray) : Iterable<Double>, Vec(data) {

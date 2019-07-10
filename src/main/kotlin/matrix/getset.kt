@@ -1,7 +1,6 @@
-package helpers.extensions.matrix
+package matrix
 
 import helpers.errors.SizeMismatch
-import matrix.Matrix
 import vec.Vec
 import vector.Vector
 

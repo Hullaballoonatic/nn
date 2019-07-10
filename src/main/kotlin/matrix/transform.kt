@@ -1,6 +1,5 @@
-package helpers.extensions.matrix
+package matrix
 
-import matrix.Matrix
 import vector.Vector
 
 fun <T> Matrix.mapRows(op: (Vector) -> T): List<T> = rows.map(op)

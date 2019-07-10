@@ -1,18 +1,18 @@
 package vector
 
 import helpers.errors.SizeMismatch
-import helpers.extensions.matrix.Matrix
+import matrix.M
 import vec.Vec
 
 fun List<Double>.toVector() = Vector(this)
 fun DoubleArray.toVector() = Vector(this)
-fun List<Double>.toMatrixByRows(m: Int) = (size / m).let { n -> Matrix(m, n) { (i, j) -> this[i * n + j] } }
+fun List<Double>.toMatrixByRows(m: Int) = (size / m).let { n -> M(m, n) { (i, j) -> this[i * n + j] } }
 
 fun List<Vector>.sumByVector(op: (v: Vector) -> Vector) = drop(1).fold(op(first())) { acc, it -> acc + op(it) }
 fun List<Vector>.sum() = sumByVector { it }
 
 infix fun DoubleArray.o(that: DoubleArray) =
-    Matrix(this.size, that.size) { (i, j) -> this[i] * that[j] }
+    M(this.size, that.size) { (i, j) -> this[i] * that[j] }
 
 val Vec.sqMagnitude get() = squaredMagnitude()
 

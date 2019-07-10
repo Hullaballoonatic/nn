@@ -3,10 +3,10 @@
 package nn.layers
 
 import addNoise
-import helpers.extensions.matrix.matrixOfRows
-import helpers.extensions.matrix.times
 import helpers.rand
-import nn.trainers.ols
+import matrix.matrixOfRows
+import matrix.times
+import nn.trainers.OrdinaryLeastSquares
 import org.junit.jupiter.api.Test
 import shouldBe
 import shouldBeAbout
@@ -33,6 +33,6 @@ internal class LinearTest {
 
         y.addNoise()
 
-        layer.weights shouldBeAbout ols(matrixOfRows(x), matrixOfRows(y))
+        layer.weights shouldBeAbout OrdinaryLeastSquares(matrixOfRows(x), matrixOfRows(y))
     }
 }

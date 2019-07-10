@@ -1,6 +1,6 @@
 package vector
 
-import helpers.extensions.matrix.matrixOfRows
+import matrix.matrixOfRows
 import org.junit.jupiter.api.Test
 
 import shouldBe

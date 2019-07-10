@@ -2,17 +2,15 @@
 
 package nn
 
-import helpers.extensions.matrix.*
 import helpers.rand
+import matrix.*
 import nn.layers.Linear
-import nn.trainers.ols
+import nn.trainers.OrdinaryLeastSquares
 import org.junit.jupiter.api.Test
-import shouldBe
 import shouldBeAbout
 import vector.Vector
 import vector.fill
 import kotlin.math.sqrt
-import helpers.extensions.matrix.Matrix as M
 
 internal class NeuralNetworkTest {
     @Test
@@ -32,20 +30,6 @@ internal class NeuralNetworkTest {
         learner.crossValidate(X, Y, 3, 1) shouldBeAbout sqrt(6.0)
     }
 
-    val A = M(3, 3) { 1 }
-    val B = M(3, 3) { 2 }
-    val C = M(3, 3) { 3 }
-
-    @Test
-    fun plus() {
-        (A + B) shouldBe C
-    }
-
-    @Test
-    fun minus() {
-        (C - B) shouldBe A
-    }
-
     @Test
     fun refineWeights() {
         val X = M("D:\\Git\\nn\\src\\main\\resources\\data\\housing_feat.arff")
@@ -62,7 +46,7 @@ internal class NeuralNetworkTest {
             nn.refineWeights(X[i], Y[i])
         }
 
-        nn.weights shouldBeAbout ols(X, Y)
+        nn.weights shouldBeAbout OrdinaryLeastSquares(X, Y)
     }
 
     @Test

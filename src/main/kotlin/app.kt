@@ -1,6 +1,6 @@
 @file:Suppress("LocalVariableName")
 
-import helpers.extensions.matrix.Matrix
+import matrix.M
 import nn.SupervisedLearner
 
 fun main() {
@@ -9,8 +9,8 @@ fun main() {
 
 fun unaryDataTest(learner: SupervisedLearner, challenge: String) {
     val fn = "data/$challenge"
-    val X = Matrix("${fn}_feat.arff")
-    val Y = Matrix("${fn}_lab.arff")
+    val X = M("${fn}_feat.arff")
+    val Y = M("${fn}_lab.arff")
 
     val error = learner.crossValidate(X, Y, 5, 10)
 
@@ -20,15 +20,15 @@ fun unaryDataTest(learner: SupervisedLearner, challenge: String) {
 fun test(learner: SupervisedLearner, challenge: String) {
     // Load the training data
     val fn = "data/$challenge"
-    val trainFeatures = Matrix("${fn}_train_feat.arff")
-    val trainLabels = Matrix("${fn}_train_lab.arff")
+    val trainFeatures = M("${fn}_train_feat.arff")
+    val trainLabels = M("${fn}_train_lab.arff")
 
     // Train the model
     learner.train(trainFeatures, trainLabels)
 
     // Load the test data
-    val testFeatures = Matrix("${fn}_test_feat.arff")
-    val testLabels = Matrix("${fn}_test_lab.arff")
+    val testFeatures = M("${fn}_test_feat.arff")
+    val testLabels = M("${fn}_test_lab.arff")
 
     // Measure and report accuracy
     val error = learner.countMisclassifications(testFeatures, testLabels)

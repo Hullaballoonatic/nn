@@ -2,10 +2,10 @@
 
 package nn.layers
 
-import helpers.extensions.matrix.flattenToVector
-import helpers.extensions.matrix.t
-import helpers.extensions.matrix.times
 import matrix.Matrix
+import matrix.flattenToVector
+import matrix.t
+import matrix.times
 import nn.Layer
 import nn.trainers.OrdinaryLeastSquares
 import vector.Vector
@@ -22,7 +22,7 @@ class Linear(override val numInputs: Int, override val numOutputs: Int) : Layer 
     override val weights = Vector(numOutputs * numInputs + numOutputs)
     override val gradient = Vector(weights.size)
 
-    override val onTrain = OrdinaryLeastSquares(toWeights)
+    override val onTrain = OrdinaryLeastSquares
     override val onActivate = { _: Vector, x: Vector -> M * x + b }
     override val onBackProp = { _: Vector, blame: Vector -> M.t * blame }
     override val onUpdateGradient = { x: Vector, blame: Vector -> toWeights(blame o x, blame) }

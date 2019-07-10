@@ -3,12 +3,9 @@
 package nn.trainers
 
 import helpers.errors.SizeMismatch
-import helpers.extensions.matrix.*
-import matrix.Matrix
+import matrix.*
 import nn.Trainer
 import vector.Vector
-
-val ols = OrdinaryLeastSquares()
 
 class OrdinaryLeastSquares(val toWeights: (M: Matrix, b: Vector) -> Vector = { M, b -> M.flattenToVector().append(b) }) : Trainer {
     override fun invoke(X: Matrix, Y: Matrix): Vector {
@@ -29,4 +26,6 @@ class OrdinaryLeastSquares(val toWeights: (M: Matrix, b: Vector) -> Vector = { M
 
         return toWeights(M, b)
     }
+
+    companion object : Trainer by OrdinaryLeastSquares()
 }

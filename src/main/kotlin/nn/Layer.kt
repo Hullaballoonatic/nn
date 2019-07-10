@@ -1,8 +1,8 @@
 package nn
 
 import helpers.errors.SizeMismatch
-import helpers.extensions.matrix.m
 import matrix.Matrix
+import matrix.m
 import vector.Vector
 import vector.plusAssign
 

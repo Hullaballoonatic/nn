@@ -2,7 +2,9 @@ package nn
 
 import helpers.rand
 import matrix.Matrix
+import matrix.get
 import matrix.joinToVector
+import matrix.m
 import vector.Vector
 import vector.fillBy
 import vector.fillByIndex
@@ -28,8 +30,14 @@ interface NeuralNetwork : List<Layer>, SupervisedLearner {
     override fun train(X: Matrix, Y: Matrix) {
         when (size) {
             0 -> error("No layers to train.")
-            1 -> first().train(X, Y)
-            else -> TODO("fold throughout layers")
+            else -> {
+                val numEntries = X.m
+                val indices = 0 until numEntries
+                repeat(10 * numEntries) {
+                    val i = indices.random()
+                    refineWeights(X[i], Y[i])
+                }
+            }
         }
     }
 
@@ -50,18 +58,23 @@ interface NeuralNetwork : List<Layer>, SupervisedLearner {
     }
 
     companion object { // Basic Implementation
-        private fun List<Layer>.verifyInputsOutputsMatchUp() = drop(1).fold(first().numInputs) { previousNumOutputs, layer ->
-            if (layer.numInputs != previousNumOutputs) error("Each layer must have a number of inputs equal to the previous layer's number of outputs.")
-            layer.numOutputs
+        private fun List<Layer>.verifyInputsOutputsMatchUp(): Int {
+            var numOutputs = first().numInputs
+            forEach {
+                if (it.numInputs != numOutputs) error("Each layer must have a number of inputs equal to the previous layer's number of outputs.")
+                numOutputs = it.numOutputs
+            }
+            return numOutputs
         }
 
         operator fun invoke(layers: List<Layer>, initWeights: Boolean = true): NeuralNetwork {
             layers.verifyInputsOutputsMatchUp()
             return object : NeuralNetwork, List<Layer> by layers {
                 override val name = "Neural Network"
+                override fun toString() = indices.joinToString("\n") { "$it) [${get(it)}]" }
             }.apply { if (initWeights) initWeights() }
         }
 
-        operator fun invoke(vararg layers: Layer) = invoke(layers.toList())
+        fun nnOf(vararg layers: Layer) = invoke(layers.toList())
     }
 }

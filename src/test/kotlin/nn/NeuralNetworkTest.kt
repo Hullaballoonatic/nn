@@ -3,8 +3,12 @@
 package nn
 
 import helpers.rand
-import matrix.*
+import matrix.M
+import matrix.matrixOfRows
+import matrix.n
+import nn.NeuralNetwork.Companion.nnOf
 import nn.layers.Linear
+import nn.layers.Tanh
 import nn.trainers.OrdinaryLeastSquares
 import org.junit.jupiter.api.Test
 import shouldBeAbout
@@ -17,7 +21,7 @@ internal class NeuralNetworkTest {
     fun linear() {
         val X = M("D:\\Git\\nn\\src\\main\\resources\\data\\housing_feat.arff")
         val Y = M("D:\\Git\\nn\\src\\main\\resources\\data\\housing_lab.arff")
-        val nn = NeuralNetwork(Linear(X.n, Y.n))
+        val nn = nnOf(Linear(X.n, Y.n))
         val error = nn.crossValidate(X, Y, 10, 5)
         println("sse = $error")
     }
@@ -35,23 +39,20 @@ internal class NeuralNetworkTest {
         val X = M("D:\\Git\\nn\\src\\main\\resources\\data\\housing_feat.arff")
         val Y = M("D:\\Git\\nn\\src\\main\\resources\\data\\housing_lab.arff")
 
-        val nn = NeuralNetwork(Linear(X.n, Y.n))
-
-        val numEntries = X.m
-
-        val indices = 0 until numEntries
-
-        repeat(10 * numEntries) {
-            val i = indices.random()
-            nn.refineWeights(X[i], Y[i])
-        }
+        val nn = nnOf(Linear(X.n, Y.n))
+        nn.train(X, Y)
 
         nn.weights shouldBeAbout OrdinaryLeastSquares(X, Y)
     }
 
     @Test
     fun updateGradient() {
-        val nn = NeuralNetwork(Linear(5, 1))
+        val nn = nnOf(
+            Linear(5, 5),
+            Tanh(5),
+            Linear(5, 1),
+            Tanh(1)
+        )
 
         val x = Vector(5) { rand.nextGaussian() }
         val y = Vector(1) { rand.nextGaussian() }

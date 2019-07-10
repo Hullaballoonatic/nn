@@ -1,35 +1,30 @@
 package nn
 
 import helpers.errors.SizeMismatch
-import matrix.Matrix
-import matrix.m
 import vector.Vector
 import vector.plusAssign
 
-interface Layer {
-    val numInputs: Int
-    val numOutputs: Int
+// TODO: Refactor out weighted layer from layer
+abstract class Layer {
+    open val name: String = javaClass.simpleName
 
-    val activation: Vector
-    val weights: Vector
-    val blame: Vector
-    val gradient: Vector
+    abstract val numInputs: Int
+    abstract val numOutputs: Int
+    abstract val numWeights: Int
 
-    val onActivate: (weights: Vector, x: Vector) -> Vector
-    val onTrain: (X: Matrix, Y: Matrix) -> Vector
-    val onBackProp: (weights: Vector, blame: Vector) -> Vector
-    val onUpdateGradient: (x: Vector, blame: Vector) -> Vector
+    val activation by lazy { Vector(numOutputs) }
+    val blame by lazy { Vector(numOutputs) }
+    val weights by lazy { Vector(numWeights) }
+    val gradient by lazy { Vector(numWeights) }
+
+    abstract val onActivate: (weights: Vector, x: Vector) -> Vector
+    abstract val onBackProp: (weights: Vector, blame: Vector) -> Vector
+    abstract val onUpdateGradient: (x: Vector, blame: Vector) -> Vector
 
     fun activate(x: Vector): Vector {
         if (x.size != numInputs) throw SizeMismatch("num Inputs", x.size, numInputs)
         activation.copy(onActivate(weights, x))
         return activation
-    }
-
-    fun train(X: Matrix, Y: Matrix): Vector {
-        if (X.m != Y.m) throw SizeMismatch("train", "X.m=${X.m}, Y.m=${Y.m}", "#entries on features and labels equal.")
-        weights.copy(onTrain(X, Y))
-        return weights
     }
 
     /**
@@ -47,4 +42,6 @@ interface Layer {
         gradient += onUpdateGradient(x, blame)
         return activation
     }
+
+    override fun toString() = "$name: $numInputs->$numOutputs, Weights=$numWeights"
 }

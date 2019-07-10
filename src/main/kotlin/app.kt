@@ -19,26 +19,28 @@ fun main() {
         Leaky(1)
     )
 
-    println(learner)
-
     test(learner, "mnist")
 }
 
 fun test(learner: SupervisedLearner, challenge: String) {
-    // Load the training data
+    println("learner:\n$learner\n")
     val fn = "D:\\Git\\nn\\src\\main\\resources\\data\\$challenge"
+
+    println("loading training data")
     val trainFeatures = M("${fn}_train_feat.arff")
     val trainLabels = M("${fn}_train_lab.arff")
 
-    // Train the model
+    println("training")
     learner.train(trainFeatures, trainLabels)
 
-    // Load the test data
+    println("loading testing data")
     val testFeatures = M("${fn}_test_feat.arff")
     val testLabels = M("${fn}_test_lab.arff")
 
     // Measure and report accuracy
+    println("testing")
     val error = learner.countMisclassifications(testFeatures, testLabels)
+    println("complete")
     println("Misclassifications by ${learner.name} at $challenge = $error/${testFeatures.rows()}")
 }
 

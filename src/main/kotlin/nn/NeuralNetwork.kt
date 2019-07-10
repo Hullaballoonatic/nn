@@ -7,7 +7,6 @@ import matrix.joinToVector
 import matrix.m
 import vector.Vector
 import vector.fillBy
-import vector.fillByIndex
 import vector.plusAssign
 import kotlin.math.max
 
@@ -33,10 +32,13 @@ interface NeuralNetwork : List<Layer>, SupervisedLearner {
             else -> {
                 val numEntries = X.m
                 val indices = 0 until numEntries
-                repeat(10 * numEntries) {
+                repeat(numEntries) {
+                    if (it % 5000 == 0) println()
+                    if (it % 100 == 0) print(".")
                     val i = indices.random()
                     refineWeights(X[i], Y[i])
                 }
+                println()
             }
         }
     }
@@ -49,12 +51,6 @@ interface NeuralNetwork : List<Layer>, SupervisedLearner {
 
     fun updateGradient(x: Vector) {
         fold(x) { previousActivation, layer -> layer.updateGradient(previousActivation) }
-    }
-
-    fun generateRandomWeights() {
-        forEach {
-            it.weights.fillByIndex { rand.nextGaussian() }
-        }
     }
 
     companion object { // Basic Implementation

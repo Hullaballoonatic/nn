@@ -1,5 +1,10 @@
 @file:Suppress("UNCHECKED_CAST")
 
+import helpers.errors.SizeMismatch
+import helpers.extensions.matrix.dims
+import helpers.extensions.matrix.dimsStr
+import helpers.extensions.matrix.get
+import helpers.extensions.matrix.indices
 import helpers.rand
 import matrix.Matrix
 import vector.Vector
@@ -34,6 +39,14 @@ infix fun Iterable<Number>.shouldBeAbout(that: Iterable<Number>) {
     if (zip(that) { a, b -> a near b }.any { false }) error("$this\n ↑ SHOULD BE ABOUT ↓\n$that")
 }
 
+infix fun Matrix.shouldBeAbout(that: Matrix) {
+    if (dims != that.dims)
+        throw SizeMismatch("A should be about B", "A=$dimsStr, B=${that.dimsStr}", "Equal sizes of both matrices.")
+    for (i in indices)
+        if (this[i] notNear that[i])
+            error("A$i=${this[i]} SHOULD BE ABOUT B$i=${that[i]}")
+}
+
 infix fun DoubleArray.shouldBeAbout(that: DoubleArray) {
     if (zip(that) { a, b -> a near b }.any { false }) error("$this\n ↑ SHOULD BE ABOUT ↓\n$that")
 }
@@ -50,6 +63,7 @@ infix fun DoubleArray.shouldNotBeAbout(that: DoubleArray) {
     if (zip(that) { a, b -> a near b }.any { true }) error("$this\n ↑ SHOULD NOT BE ABOUT ↓\n$that")
 }
 
-infix fun Number.near(other: Number) = abs(toDouble() - other.toDouble()) < 1e-16
+infix fun Number.notNear(other: Number) = !abs(toDouble() - other.toDouble()).isSmall
+infix fun Number.near(other: Number) = abs(toDouble() - other.toDouble()).isSmall
 
-val Number.isSmall get() = abs(toDouble()) < 1e-16
+val Number.isSmall get() = abs(toDouble()) <= 1e-16

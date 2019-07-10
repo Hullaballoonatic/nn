@@ -3,14 +3,15 @@
 package nn.layers
 
 import addNoise
-import helpers.extensions.matrix.Matrix
 import helpers.extensions.matrix.matrixOfRows
 import helpers.extensions.matrix.times
 import helpers.rand
-import nn.trainers.ordinaryLeastSquares
+import nn.trainers.ols
 import org.junit.jupiter.api.Test
 import shouldBe
 import shouldBeAbout
+import vector.Vector
+import vector.fillByValue
 import vector.vectorOf
 
 internal class LinearTest {
@@ -24,19 +25,14 @@ internal class LinearTest {
 
     @Test
     fun ols() {
-        val numInputs = 10
-        val numOutputs = 2
-        val numEntries = 20
+        val layer = Linear(10, 2)
+        layer.weights.fillByValue { rand.nextGaussian() }
 
-        val layer = Linear(numInputs, numOutputs)
+        val x = Vector(10) { rand.nextGaussian() }
+        val y = layer.activate(x)
 
-        val X = Matrix(numEntries, numInputs) { rand.nextGaussian() }
-        val Y = layer.activate(X)
+        y.addNoise()
 
-        Y.addNoise()
-
-        val res = ordinaryLeastSquares(X, Y)
-
-        layer.weights shouldBeAbout res
+        layer.weights shouldBeAbout ols(matrixOfRows(x), matrixOfRows(y))
     }
 }

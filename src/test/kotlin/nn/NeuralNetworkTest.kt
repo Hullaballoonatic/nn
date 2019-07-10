@@ -1,17 +1,24 @@
+@file:Suppress("NAME_SHADOWING", "LocalVariableName")
+
 package nn
 
 import helpers.extensions.matrix.*
+import helpers.rand
 import nn.layers.Linear
+import nn.trainers.ols
 import org.junit.jupiter.api.Test
 import shouldBe
 import shouldBeAbout
+import vector.Vector
+import vector.fill
 import kotlin.math.sqrt
+import helpers.extensions.matrix.Matrix as M
 
 internal class NeuralNetworkTest {
     @Test
     fun linear() {
-        val X = Matrix("D:\\Git\\nn\\src\\main\\resources\\data\\housing_feat.arff")
-        val Y = Matrix("D:\\Git\\nn\\src\\main\\resources\\data\\housing_lab.arff")
+        val X = M("D:\\Git\\nn\\src\\main\\resources\\data\\housing_feat.arff")
+        val Y = M("D:\\Git\\nn\\src\\main\\resources\\data\\housing_lab.arff")
         val nn = NeuralNetwork(Linear(X.n, Y.n))
         val error = nn.crossValidate(X, Y, 10, 5)
         println("sse = $error")
@@ -25,9 +32,9 @@ internal class NeuralNetworkTest {
         learner.crossValidate(X, Y, 3, 1) shouldBeAbout sqrt(6.0)
     }
 
-    val A = Matrix(3, 3) { 1 }
-    val B = Matrix(3, 3) { 2 }
-    val C = Matrix(3, 3) { 3 }
+    val A = M(3, 3) { 1 }
+    val B = M(3, 3) { 2 }
+    val C = M(3, 3) { 3 }
 
     @Test
     fun plus() {
@@ -37,5 +44,54 @@ internal class NeuralNetworkTest {
     @Test
     fun minus() {
         (C - B) shouldBe A
+    }
+
+    @Test
+    fun refineWeights() {
+        val X = M("D:\\Git\\nn\\src\\main\\resources\\data\\housing_feat.arff")
+        val Y = M("D:\\Git\\nn\\src\\main\\resources\\data\\housing_lab.arff")
+
+        val nn = NeuralNetwork(Linear(X.n, Y.n))
+
+        val numEntries = X.m
+
+        val indices = 0 until numEntries
+
+        repeat(10 * numEntries) {
+            val i = indices.random()
+            nn.refineWeights(X[i], Y[i])
+        }
+
+        nn.weights shouldBeAbout ols(X, Y)
+    }
+
+    @Test
+    fun updateGradient() {
+        val nn = NeuralNetwork(Linear(5, 1))
+
+        val x = Vector(5) { rand.nextGaussian() }
+        val y = Vector(1) { rand.nextGaussian() }
+
+        val h = Vector(5) { 1e-6 } // technically h/2
+
+        val f: (Vector) -> Vector = { x ->
+            nn.run {
+                backProp(x, y)
+                updateGradient(x)
+
+                val res = gradient
+
+                // reset
+                forEach { layer ->
+                    layer.gradient.fill(0) // no need to clear activation, because it is completely overwritten by each f
+                    layer.blame.fill(0) // no need to clear weights, because they are not altered by f
+                }
+
+                res
+            }
+        }
+
+        //  Central Diff
+        f(x + h) - f(x - h) shouldBeAbout f(x)
     }
 }

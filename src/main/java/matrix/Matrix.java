@@ -485,7 +485,7 @@ public class Matrix {
 
 
     /// Copies that matrix
-    void copy(Matrix that) {
+    public void copy(Matrix that) {
         setSize(that.rows(), that.cols());
         copyBlock(0, 0, that, 0, 0, that.rows(), that.cols());
     }

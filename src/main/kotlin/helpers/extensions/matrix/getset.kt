@@ -28,6 +28,10 @@ operator fun Matrix.set(i: Int, j: Int, v: Number) {
     m_data[i][j] = v.toDouble()
 }
 
+operator fun Matrix.set(p: Pair<Int, Int>, v: Number) {
+    m_data[p.first][p.second] = v.toDouble()
+}
+
 fun Matrix.clear() {
     while (m > 0)
         removeRow(m - 1)

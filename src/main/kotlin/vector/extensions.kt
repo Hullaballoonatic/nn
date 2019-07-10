@@ -18,6 +18,37 @@ val Vec.sqMagnitude get() = squaredMagnitude()
 
 operator fun Vec.plus(w: Vec) = data.zip(w.data) { a, b -> a + b }.toDoubleArray()
 
+operator fun Vector.plusAssign(w: Vector) {
+    when {
+        size != w.size() -> throw SizeMismatch("v+w", "v=$size, w=${w.size()}", "v==w")
+        else -> indices.forEach {
+            this[it] += w[it]
+        }
+    }
+}
+
+fun Vector.fillByIndex(op: (Int) -> Double) {
+    for (i in indices)
+        this[i] = op(i)
+}
+
+fun Vector.fillByValue(op: (Double) -> Double) {
+    forEachIndexed { i, v ->
+        this[i] = op(v)
+    }
+}
+
+fun Vector.fillBy(op: () -> Double) {
+    for (i in indices) this[i] = op()
+}
+
+fun Vector.fill(v: Number) = fill(v.toDouble())
+
+fun Vector.fill(v: Double) {
+    for (i in indices)
+        this[i] = v
+}
+
 operator fun Vector.plus(w: Vec) = when {
     size != w.size() -> throw SizeMismatch("v+w", "v=$size, w=${w.size()}", "v==w")
     else -> Vector(size()) { this[it] + w[it] }

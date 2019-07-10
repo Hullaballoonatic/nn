@@ -15,7 +15,7 @@ interface SupervisedLearner {
 
     fun train(X: Matrix, Y: Matrix)
 
-    fun predict(X: Matrix): Matrix
+    fun predict(x: Vector): Vector
 
     fun checkEntries(X: Matrix, Y: Matrix): Int {
         if (X.m != Y.m) throw SizeMismatch("learner", "X.m=${X.m}, Y.m=${Y.m}", "X and Y have same number of entries.")
@@ -24,14 +24,12 @@ interface SupervisedLearner {
 
     fun countMisclassifications(X: Matrix, Y: Matrix): Int {
         checkEntries(X, Y)
-        return predict(X).run {
-            indices.count { A[it] != Y[it] }
-        }
+        return List(X.m) { predict(X[it]) != Y[it] }.count { true }
     }
 
     fun sumSquaredError(X: Matrix, Y: Matrix): Double {
         checkEntries(X, Y)
-        return (predict(X) - Y).rows.sumByDouble { it.sqMagnitude }
+        return List(X.m) { predict(X[it]) - Y[it] }.sumByDouble { it.sqMagnitude }
     }
 
     fun crossValidate(X: Matrix, Y: Matrix, numFolds: Int, repetitions: Int = 1, computeErr: (X: Matrix, Y: Matrix) -> Double = { x, y -> sumSquaredError(x, y) }): Double {
@@ -74,7 +72,7 @@ interface SupervisedLearner {
                 }
             }
 
-            override fun predict(X: Matrix) = Matrix(X.m) { mode }
+            override fun predict(x: Vector) = mode
         }
     }
 }
